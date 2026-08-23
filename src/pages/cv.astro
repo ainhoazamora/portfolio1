@@ -1,0 +1,199 @@
+---
+import Base from '../layouts/Base.astro';
+import { education, experience, skills, symposiums, toolkits } from '../data/site';
+---
+
+<Base
+  title="CV"
+  current="cv"
+  description="Education, research experience, employment, methods and symposiums."
+>
+  <div class="wrap page">
+    <p class="eyebrow">Curriculum vitae</p>
+    <h1 class="page-title">CV</h1>
+    <p class="note">
+      A downloadable PDF version is not published yet. Everything below is on this page in full.
+    </p>
+
+    <section class="section" id="education">
+      <h2>Education</h2>
+      <div class="entries">
+        {
+          education.map((item) => (
+            <article class="entry">
+              <p class="entry-period">{item.period}</p>
+              <div>
+                <h3>{item.institution}</h3>
+                <ul class="entry-list">
+                  {item.items.map((line) => (
+                    <li>{line}</li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <h2>Research experience and employment</h2>
+      <div class="entries">
+        {
+          experience.map((item) => (
+            <article class="entry">
+              <p class="entry-period">{item.period}</p>
+              <div>
+                <h3>{item.role}</h3>
+                <p class="entry-org">{item.org}</p>
+                <ul class="entry-list">
+                  {item.items.map((line) => (
+                    <li>{line}</li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <h2>Methods and technical skills</h2>
+      <div class="skills-grid">
+        <ul class="skill-bars">
+          {
+            skills.map((skill) => (
+              <li>
+                <div class="skill-head">
+                  <span>{skill.label}</span>
+                  <span class="skill-value">{skill.level}%</span>
+                </div>
+                <div class="skill-track">
+                  <div class="skill-fill" style={`width:${skill.level}%`} />
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+        <ul class="toolkits">
+          {
+            toolkits.map((tool) => (
+              <li>
+                <span class="toolkit-name">{tool.label}</span>
+                <span class="toolkit-detail">{tool.detail}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <p class="note">Self-assessed proficiency, as stated on the previous portfolio.</p>
+    </section>
+
+    <section class="section" id="symposiums">
+      <h2>Symposiums, conferences and certificates</h2>
+      <div class="entries">
+        {
+          symposiums.map((item) => (
+            <article class="entry">
+              <p class="entry-period">{item.period}</p>
+              <div>
+                <h3>{item.org}</h3>
+                <p class="entry-org">{item.place}</p>
+                <ul class="entry-list">
+                  {item.items.map((line) => (
+                    <li>{line}</li>
+                  ))}
+                </ul>
+                {item.link && (
+                  <p class="entry-link">
+                    <a href={item.link.href} rel="noopener">
+                      {item.link.label}
+                    </a>
+                  </p>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .page-title {
+    margin-bottom: 0.9rem;
+  }
+  .note {
+    font-size: 0.85rem;
+    color: var(--faint);
+    font-family: var(--sans);
+    max-width: 52ch;
+  }
+
+  .skills-grid {
+    display: grid;
+    gap: 2.4rem;
+  }
+  @media (min-width: 48rem) {
+    .skills-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+    }
+  }
+
+  .skill-bars {
+    display: grid;
+    gap: 1.05rem;
+    align-content: start;
+  }
+  .skill-head {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--sans);
+    font-size: 0.86rem;
+    margin-bottom: 0.35rem;
+  }
+  .skill-value {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--faint);
+  }
+  .skill-track {
+    height: 2px;
+    background: var(--rule);
+  }
+  .skill-fill {
+    height: 2px;
+    background: var(--c-research);
+  }
+
+  .toolkits {
+    border-top: 1px solid var(--rule);
+    align-content: start;
+  }
+  .toolkits li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .toolkit-name {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+  }
+  .toolkit-detail {
+    color: var(--muted);
+    font-size: 0.88rem;
+    text-align: right;
+  }
+
+  .entry-link {
+    margin: 0.5rem 0 0;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+  }
+</style>

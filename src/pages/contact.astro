@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base title="Contact" current="contact" description={`Contact ${site.name} by email or LinkedIn.`}>
+  <div class="wrap page">
+    <p class="eyebrow">Contact</p>
+    <h1 class="page-title">Get in touch</h1>
+    <p class="lede">
+      For research collaborations, questions about a paper, or anything else — email is the most
+      reliable route.
+    </p>
+
+    <ul class="contact-list">
+      <li>
+        <span class="contact-label">Email</span>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </li>
+      <li>
+        <span class="contact-label">LinkedIn</span>
+        <a href={site.linkedin} rel="me noopener">{site.linkedinLabel}</a>
+      </li>
+      <li>
+        <span class="contact-label">Based in</span>
+        <span>{site.location}</span>
+      </li>
+    </ul>
+
+    <p class="contact-note">
+      Emails about a specific paper are easier to answer if you mention the title.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .page-title {
+    margin-bottom: 1.2rem;
+  }
+
+  .contact-list {
+    margin-top: 3rem;
+    border-top: 1px solid var(--rule);
+    max-width: 44rem;
+  }
+  .contact-list li {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 1.05rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .contact-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .contact-list a {
+    font-size: 1.05rem;
+  }
+
+  @media (max-width: 34rem) {
+    .contact-list li {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+  }
+
+  .contact-note {
+    margin-top: 2rem;
+    color: var(--faint);
+    font-size: 0.88rem;
+  }
+</style>

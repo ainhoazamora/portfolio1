@@ -1,0 +1,381 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { humanise } from '../lib/labels';
+import { isThesis, sortPapers } from '../lib/graph';
+import { url } from '../lib/url';
+
+const all = sortPapers(await getCollection('papers'));
+const masterPapers = all.filter((p) => p.data.type === 'Master paper');
+const bachelorPapers = all.filter((p) => p.data.type === 'Bachelor paper');
+const theses = all.filter(isThesis);
+const current = all.find((p) => p.data.type === 'Master thesis');
+
+const topics = [...new Set(all.flatMap((p) => p.data.topics))].sort();
+const methods = [...new Set(all.flatMap((p) => p.data.methods))].sort();
+const periods = [...new Set(all.map((p) => p.data.period))].sort();
+
+const areas = [
+  {
+    title: 'Computational criminology',
+    body: 'Applying predictive modelling and explainable AI to criminological questions.',
+  },
+  {
+    title: 'Criminal networks',
+    body: 'Network analysis approaches, including Bayesian methods, to map relational dynamics.',
+  },
+  {
+    title: 'Financial crime and fraud',
+    body: 'Transaction analysis, behavioural indicators and anomaly detection in practice.',
+  },
+  {
+    title: 'Human and organ trafficking',
+    body: 'Critical examination of policy making and the datasets it rests on.',
+  },
+  {
+    title: 'Border security',
+    body: 'Crimmigration narratives and how they are reproduced in policing and EU law.',
+  },
+  {
+    title: 'Cybercrime',
+    body: 'Technological and national implementation of responses to online offending.',
+  },
+];
+
+const groups = [
+  { id: 'master-papers', title: "Master's papers", items: masterPapers },
+  { id: 'bachelor-papers', title: "Bachelor's papers", items: bachelorPapers },
+];
+---
+
+<Base
+  title="Research"
+  current="research"
+  description="Research areas, master's and bachelor's papers, and thesis work by Ainhoa Zamora."
+>
+  <div class="wrap page">
+    <p class="eyebrow">Research</p>
+    <h1 class="page-title">Research</h1>
+    <p class="lede">
+      Written work from the IMARC master programme and the BSc in Criminology at Bristol, alongside
+      ongoing thesis research on criminal networks.
+    </p>
+
+    <section class="section" id="areas">
+      <h2>Research areas</h2>
+      <ul class="areas">
+        {
+          areas.map((area) => (
+            <li>
+              <h3>{area.title}</h3>
+              <p>{area.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    {
+      current && (
+        <section class="section" id="current">
+          <h2>Current work</h2>
+          <article class="feature">
+            <p class="meta">
+              {current.data.status} · {current.data.period}
+            </p>
+            <h3>
+              <a href={url(`/papers/${current.id}`)}>{current.data.title}</a>
+            </h3>
+            <p>
+              Ensembling machine learning methods, such as XGBoost and Random Forest, for
+              classification and prediction, alongside network analysis approaches including
+              Bayesian methods to map relational dynamics in criminal networks.
+            </p>
+            <p class="meta">{current.data.programme}</p>
+          </article>
+        </section>
+      )
+    }
+
+    <section class="section" id="theses">
+      <h2>Theses</h2>
+      <ul class="paper-list">
+        {
+          theses.map((paper) => (
+            <li class="paper-row">
+              <div>
+                <a class="paper-title" href={url(`/papers/${paper.id}`)}>
+                  {paper.data.title}
+                </a>
+                <p class="paper-sub">{paper.data.programme}</p>
+              </div>
+              <p class="paper-meta">
+                {paper.data.type} · {paper.data.period}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="section" id="papers">
+      <h2>Papers</h2>
+
+      <form class="filters" data-filters aria-label="Filter papers">
+        <p class="filters-note">Filters need JavaScript. Every paper is listed below either way.</p>
+        <div class="filters-row">
+          <label>
+            <span>Type</span>
+            <select data-filter="type">
+              <option value="">All types</option>
+              <option value="Master paper">Master paper</option>
+              <option value="Bachelor paper">Bachelor paper</option>
+            </select>
+          </label>
+          <label>
+            <span>Topic</span>
+            <select data-filter="topics">
+              <option value="">All topics</option>
+              {topics.map((topic) => <option value={topic}>{humanise(topic)}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>Years</span>
+            <select data-filter="period">
+              <option value="">All years</option>
+              {periods.map((period) => <option value={period}>{period}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>Method</span>
+            <select data-filter="methods">
+              <option value="">All methods</option>
+              {methods.map((method) => <option value={method}>{humanise(method)}</option>)}
+            </select>
+          </label>
+          <button type="button" class="filters-reset" data-filter-reset>Reset</button>
+        </div>
+        <p class="filters-count" data-filter-count aria-live="polite"></p>
+      </form>
+
+      {
+        groups.map((group) => (
+          <div class="paper-group" data-group={group.id}>
+            <h3 class="group-title">{group.title}</h3>
+            <ul class="paper-list">
+              {group.items.map((paper) => (
+                <li
+                  class="paper-row"
+                  data-paper
+                  data-type={paper.data.type}
+                  data-period={paper.data.period}
+                  data-topics={paper.data.topics.join(' ')}
+                  data-methods={paper.data.methods.join(' ')}
+                >
+                  <div>
+                    <a class="paper-title" href={url(`/papers/${paper.id}`)}>
+                      {paper.data.title}
+                    </a>
+                    {paper.data.subtitle && <p class="paper-sub">{paper.data.subtitle}</p>}
+                    {paper.data.topics.length > 0 && (
+                      <ul class="tags row-tags">
+                        {paper.data.topics.map((topic) => (
+                          <li class="tag">{humanise(topic)}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  <p class="paper-meta">
+                    {paper.data.module ? `${paper.data.module} · ` : ''}
+                    {paper.data.period}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+
+      <p class="empty" data-filter-empty hidden>No papers match these filters.</p>
+    </section>
+
+    <p class="footnote">
+      Years shown are the programme periods recorded in the CV, not stated publication dates. These
+      are student papers and coursework; none are described here as peer-reviewed publications.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .page-title {
+    margin-bottom: 1.4rem;
+  }
+
+  .areas {
+    display: grid;
+    gap: 1.6rem 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+  .areas li {
+    border-top: 1px solid var(--rule);
+    padding-top: 0.8rem;
+  }
+  .areas h3 {
+    font-size: 1.02rem;
+    margin-bottom: 0.3rem;
+  }
+  .areas p {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin: 0;
+  }
+
+  .feature {
+    border-left: 2px solid var(--c-identity);
+    padding-left: 1.4rem;
+  }
+  .feature h3 {
+    font-size: 1.35rem;
+    margin: 0.35rem 0 0.7rem;
+  }
+  .feature a {
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .feature p:not(.meta) {
+    color: var(--muted);
+  }
+
+  .group-title {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 500;
+    margin: 2.2rem 0 0.4rem;
+  }
+
+  .row-tags {
+    margin-top: 0.45rem;
+  }
+
+  .filters {
+    margin-bottom: 0.5rem;
+  }
+  .filters-note {
+    font-size: 0.78rem;
+    color: var(--faint);
+    font-family: var(--sans);
+    margin-bottom: 0.7rem;
+  }
+  .filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    align-items: end;
+  }
+  .filters label {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .filters label span {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .filters select {
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+    border-radius: 4px;
+    padding: 0.4rem 0.55rem;
+    min-width: 9.5rem;
+  }
+  .filters-reset {
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    color: var(--muted);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--rule-strong);
+    padding: 0.4rem 0.1rem;
+    cursor: pointer;
+  }
+  .filters-reset:hover {
+    color: var(--ink);
+  }
+  .filters-count {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--faint);
+    margin: 0.8rem 0 0;
+  }
+
+  .empty {
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 1.5rem;
+  }
+
+  .footnote {
+    margin-top: 3.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.82rem;
+    color: var(--faint);
+    max-width: 60ch;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-filters]');
+  if (form) {
+    const selects = Array.from(form.querySelectorAll<HTMLSelectElement>('select[data-filter]'));
+    const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-paper]'));
+    const groups = Array.from(document.querySelectorAll<HTMLElement>('[data-group]'));
+    const count = form.querySelector<HTMLElement>('[data-filter-count]');
+    const empty = document.querySelector<HTMLElement>('[data-filter-empty]');
+    const reset = form.querySelector<HTMLButtonElement>('[data-filter-reset]');
+
+    const matches = (row: HTMLElement) =>
+      selects.every((select) => {
+        const value = select.value;
+        if (!value) return true;
+        const field = select.dataset.filter ?? '';
+        const data = row.dataset[field] ?? '';
+        return field === 'topics' || field === 'methods'
+          ? data.split(' ').includes(value)
+          : data === value;
+      });
+
+    const apply = () => {
+      let visible = 0;
+      for (const row of rows) {
+        const show = matches(row);
+        row.hidden = !show;
+        if (show) visible += 1;
+      }
+      for (const group of groups) {
+        const any = Array.from(group.querySelectorAll<HTMLElement>('[data-paper]')).some(
+          (row) => !row.hidden,
+        );
+        group.hidden = !any;
+      }
+      if (count) count.textContent = `${visible} of ${rows.length} papers shown`;
+      if (empty) empty.hidden = visible !== 0;
+    };
+
+    for (const select of selects) select.addEventListener('change', apply);
+    reset?.addEventListener('click', () => {
+      for (const select of selects) select.value = '';
+      apply();
+    });
+    apply();
+  }
+</script>

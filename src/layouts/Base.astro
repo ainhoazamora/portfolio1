@@ -1,0 +1,55 @@
+---
+import Nav from '../components/Nav.astro';
+import { site } from '../data/site';
+import { url } from '../lib/url';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  current?: string;
+  wide?: boolean;
+}
+
+const { title, description = site.tagline, current, wide = false } = Astro.props;
+const fullTitle = title === site.name ? `${site.name} — ${site.role}` : `${title} — ${site.name}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site ?? 'https://example.com')} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav current={current} />
+
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+
+    <footer class="site-footer wrap" class:list={[{ 'is-wide': wide }]}>
+      <span>{site.name} — {site.role}</span>
+      <span>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <span aria-hidden="true"> · </span>
+        <a href={site.linkedin} rel="me noopener">LinkedIn</a>
+      </span>
+    </footer>
+
+    <style>
+      main:focus {
+        outline: none;
+      }
+    </style>
+  </body>
+</html>

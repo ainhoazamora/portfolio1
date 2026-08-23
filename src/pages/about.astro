@@ -1,0 +1,142 @@
+---
+import Base from '../layouts/Base.astro';
+import { bio, interests, site, toolkits } from '../data/site';
+import { url } from '../lib/url';
+
+const research = [
+  'Computational criminology',
+  'Criminal networks',
+  'Financial crime and fraud',
+  'Human and organ trafficking',
+  'Border security',
+  'Cybercrime',
+];
+
+const bookshelf = interests.find((i) => i.title === 'Bookshelf in 2026')!;
+const photography = interests.find((i) => i.title === 'Photography')!;
+---
+
+<Base title="About" current="about" description={`About ${site.name}, ${site.role.toLowerCase()}.`}>
+  <div class="wrap page">
+    <p class="eyebrow">About</p>
+    <h1 class="page-title">Hi, I'm Ainhoa</h1>
+
+    <div class="about-grid">
+      <div class="prose">
+        {bio.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+
+      <aside class="about-side">
+        <p class="meta">Currently</p>
+        <ul class="side-list">
+          <li>Second-year IMARC student, Erasmus Rotterdam & Ghent University</li>
+          <li>Fraud analyst at Indra & CaixaBank, Barcelona</li>
+          <li>Based between {site.location}</li>
+        </ul>
+      </aside>
+    </div>
+
+    <section class="section" id="interests">
+      <h2>Research interests</h2>
+      <ul class="tags">
+        {research.map((item) => <li class="tag">{item}</li>)}
+      </ul>
+    </section>
+
+    <section class="section" id="methods">
+      <h2>Computational methods</h2>
+      <p>
+        Self-taught in Python and R, with ongoing work on data visualisation and statistical
+        analysis. The master thesis combines ensembled machine learning methods with network
+        analysis.
+      </p>
+      <ul class="toolkits">
+        {
+          toolkits.map((tool) => (
+            <li>
+              <span class="toolkit-name">{tool.label}</span>
+              <span class="toolkit-detail">{tool.detail}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="section" id="bookshelf">
+      <h2>Bookshelf</h2>
+      <ul class="entry-list">
+        {bookshelf.items.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+
+    <section class="section" id="photography">
+      <h2>Photography</h2>
+      <ul class="entry-list">
+        {photography.items.map((item) => <li>{item}</li>)}
+      </ul>
+      <p class="note">
+        A selection of photographs has not been published yet. In the meantime, the research is over
+        on the <a href={url('/research')}>Research</a> page.
+      </p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .page-title {
+    margin-bottom: 2.6rem;
+  }
+
+  .about-grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  @media (min-width: 52rem) {
+    .about-grid {
+      grid-template-columns: minmax(0, 1fr) 17rem;
+      gap: 4rem;
+    }
+  }
+
+  .about-side {
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+  }
+  .side-list li {
+    font-size: 0.9rem;
+    color: var(--muted);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .toolkits {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+  }
+  .toolkits li {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .toolkit-name {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+  }
+  .toolkit-detail {
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-align: right;
+  }
+
+  .note {
+    color: var(--faint);
+    font-size: 0.9rem;
+    margin-top: 1.2rem;
+  }
+</style>

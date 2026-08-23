@@ -1,0 +1,267 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import KnowledgeGraph from '../../components/KnowledgeGraph.astro';
+import Base from '../../layouts/Base.astro';
+import { buildGraph, localGraph, sortPapers } from '../../lib/graph';
+import { humanise } from '../../lib/labels';
+import { solveLayout } from '../../lib/layout';
+import { url } from '../../lib/url';
+
+export const getStaticPaths = (async () => {
+  const papers = await getCollection('papers');
+  return papers.map((paper) => ({ params: { slug: paper.id }, props: { paper } }));
+}) satisfies GetStaticPaths;
+
+const { paper } = Astro.props;
+const { data } = paper;
+
+const all = sortPapers(await getCollection('papers'));
+const graph = buildGraph(all);
+const local = localGraph(graph, `paper:${paper.id}`, 11);
+const layout = solveLayout(local, { width: 620, height: 340, seed: 771, keepOut: [] });
+
+const related = all.filter(
+  (other) => other.id !== paper.id && other.data.topics.some((t) => data.topics.includes(t)),
+);
+
+const facts = [
+  { label: 'Type', value: data.type },
+  { label: 'Programme', value: data.programme },
+  { label: 'Institution', value: data.institution },
+  { label: 'Years', value: data.period },
+  { label: 'Status', value: data.status },
+  ...(data.module ? [{ label: 'Module', value: data.module }] : []),
+];
+---
+
+<Base
+  title={data.title}
+  description={`${data.type} by Ainhoa Zamora — ${data.programme}.`}
+  current="research"
+>
+  <div class="wrap page">
+    <p class="eyebrow">
+      <a href={url('/research')}>Research</a> · {data.type}
+    </p>
+    <h1 class="paper-heading">{data.title}</h1>
+    {data.subtitle && <p class="paper-subtitle">{data.subtitle}</p>}
+
+    <div class="paper-grid">
+      <div>
+        <section class="section" id="description">
+          <h2>Description</h2>
+          {
+            data.abstract ? (
+              <p>{data.abstract}</p>
+            ) : (
+              <p class="unverified">
+                No abstract has been published for this paper. The full text is available below.
+              </p>
+            )
+          }
+        </section>
+
+        {
+          data.topics.length > 0 && (
+            <section class="section" id="topics">
+              <h2>Research topics</h2>
+              <ul class="tags">
+                {data.topics.map((topic) => (
+                  <li class="tag">{humanise(topic)}</li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        <section class="section" id="methods">
+          <h2>Methods</h2>
+          {
+            data.methods.length > 0 ? (
+              <ul class="tags">
+                {data.methods.map((method) => (
+                  <li class="tag">{humanise(method)}</li>
+                ))}
+              </ul>
+            ) : (
+              <p class="unverified">No methods are recorded for this paper.</p>
+            )
+          }
+        </section>
+      </div>
+
+      <aside class="paper-facts">
+        <dl>
+          {
+            facts.map((fact) => (
+              <div>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        {
+          data.pdf && (
+            <a class="button button--solid" href={url(data.pdf)} target="_blank" rel="noopener">
+              Open the PDF
+            </a>
+          )
+        }
+      </aside>
+    </div>
+
+    {
+      data.pdf && (
+        <section class="section" id="document">
+          <h2>Document</h2>
+          <object
+            class="pdf"
+            data={url(data.pdf)}
+            type="application/pdf"
+            aria-label={`PDF of ${data.title}`}
+          >
+            <p>
+              Your browser cannot display the PDF here.{' '}
+              <a href={url(data.pdf)} rel="noopener">
+                Open it in a new tab
+              </a>
+              .
+            </p>
+          </object>
+        </section>
+      )
+    }
+
+    <section class="section" id="related">
+      <h2>Related work</h2>
+      <p class="graph-intro">How this paper sits among the topics and other papers on this site.</p>
+      <KnowledgeGraph
+        layout={layout}
+        variant="local"
+        interactive
+        class="local-graph"
+        label={`Local graph showing ${data.title} and the topics and papers it connects to.`}
+      />
+
+      {
+        related.length > 0 ? (
+          <ul class="paper-list related-list">
+            {related.map((other) => (
+              <li class="paper-row">
+                <div>
+                  <a class="paper-title" href={url(`/papers/${other.id}`)}>
+                    {other.data.title}
+                  </a>
+                </div>
+                <p class="paper-meta">
+                  {other.data.type} · {other.data.period}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="unverified">No other paper on this site shares a topic with this one.</p>
+        )
+      }
+    </section>
+
+    <p class="footnote">
+      This is student work produced for a degree programme. It is not a peer-reviewed publication.
+      The years shown are the programme period, not a stated publication date.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .paper-heading {
+    font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem);
+    max-width: 22ch;
+    margin-bottom: 0.6rem;
+  }
+  .paper-subtitle {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 46ch;
+  }
+
+  .paper-grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+    margin-top: 1rem;
+  }
+  @media (min-width: 54rem) {
+    .paper-grid {
+      grid-template-columns: minmax(0, 1fr) 18rem;
+      gap: 4rem;
+    }
+  }
+
+  .paper-facts {
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+    margin-top: clamp(3rem, 2rem + 4vw, 5rem);
+  }
+  .paper-facts dl {
+    margin: 0 0 1.4rem;
+  }
+  .paper-facts dl > div {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .paper-facts dt {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 0.2rem;
+  }
+  .paper-facts dd {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+
+  .unverified {
+    color: var(--faint);
+    font-size: 0.95rem;
+  }
+
+  .pdf {
+    width: 100%;
+    height: min(78vh, 46rem);
+    border: 1px solid var(--rule);
+    background: var(--paper-sunk);
+  }
+  .pdf p {
+    padding: 1.5rem;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+  }
+
+  .graph-intro {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .local-graph {
+    max-width: 42rem;
+    margin: 0 0 3rem;
+  }
+
+  .related-list {
+    margin-top: 1rem;
+  }
+
+  .footnote {
+    margin-top: 3.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.82rem;
+    color: var(--faint);
+    max-width: 60ch;
+  }
+</style>

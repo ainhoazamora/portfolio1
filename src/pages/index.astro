@@ -1,0 +1,153 @@
+---
+import { getCollection } from 'astro:content';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import { buildGraph, mobileGraph } from '../lib/graph';
+import { solveLayout } from '../lib/layout';
+import { url } from '../lib/url';
+
+const papers = await getCollection('papers');
+const graph = buildGraph(papers);
+
+// Solved once, at build time. The top-right region is kept clear so no connection
+// ever runs underneath the fixed navigation.
+const desktop = solveLayout(graph, {
+  width: 900,
+  height: 820,
+  seed: 20260101,
+  keepOut: [{ x: 470, y: 0, w: 430, h: 118 }],
+});
+
+const mobile = solveLayout(mobileGraph(graph), {
+  width: 470,
+  height: 380,
+  seed: 4204,
+});
+---
+
+<Base title={site.name} current="home">
+  <section class="hero wrap">
+    <div class="hero-text">
+      <p class="eyebrow">Criminology · Computational methods</p>
+      <h1>Ainhoa Zamora</h1>
+      <p class="lede">
+        Criminology researcher working on computational methods, criminal networks and financial
+        crime. Currently a second-year IMARC student and a fraud analyst in Barcelona.
+      </p>
+      <p class="hero-invite">
+        The map beside this text is the same portfolio, drawn as connections: research areas,
+        papers, methods and the institutions behind them. Follow a thread, or use the menu.
+      </p>
+      <div class="link-row hero-links">
+        <a class="button button--solid" href={url('/research')}>Read the research</a>
+        <a class="button" href={url('/cv')}>View CV</a>
+      </div>
+    </div>
+
+    <div class="hero-graph">
+      <KnowledgeGraph
+        layout={desktop}
+        variant="desktop"
+        interactive
+        label="Knowledge graph linking Ainhoa Zamora's research areas, papers, methods and institutions. Every destination in this graph is also reachable from the navigation and the links below."
+      />
+      <KnowledgeGraph
+        layout={mobile}
+        variant="mobile"
+        label="Simplified knowledge graph linking the main sections of this site."
+      />
+    </div>
+  </section>
+
+  <section class="wrap hero-index">
+    <h2 class="eyebrow">Everything in the graph, as links</h2>
+    <ul class="index-list">
+      <li>
+        <a href={url('/about')}>About</a> — biography, research interests, bookshelf, photography
+      </li>
+      <li><a href={url('/research')}>Research</a> — research areas and written work</li>
+      <li><a href={url('/research#papers')}>Papers</a> — master's and bachelor's papers</li>
+      <li><a href={url('/research#theses')}>Thesis</a> — bachelor thesis and master thesis</li>
+      <li><a href={url('/cv')}>CV</a> — education, experience, methods and skills</li>
+      <li><a href={url('/cv#symposiums')}>Symposiums</a> — symposiums and certificates</li>
+      <li>
+        <a href={url('/about#photography')}>Photography</a> — amateur photography and visual ethnography
+      </li>
+      <li><a href={url('/contact')}>Contact</a> — email and LinkedIn</li>
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    gap: clamp(2rem, 1rem + 5vw, 4rem);
+    align-items: center;
+    padding-top: clamp(6rem, 4rem + 8vw, 9rem);
+    padding-bottom: clamp(3rem, 2rem + 4vw, 4rem);
+  }
+
+  .hero-text {
+    max-width: 34rem;
+  }
+
+  .hero h1 {
+    margin-bottom: 1.1rem;
+  }
+
+  .hero-invite {
+    color: var(--muted);
+    font-size: 0.98rem;
+    max-width: 42ch;
+    margin-top: 1.4rem;
+  }
+
+  .hero-links {
+    margin-top: 1.8rem;
+  }
+
+  .hero-graph {
+    min-width: 0;
+  }
+
+  @media (min-width: 56rem) {
+    .hero {
+      grid-template-columns: minmax(19rem, 30rem) minmax(0, 1fr);
+      min-height: 100svh;
+      padding-top: 0;
+      gap: clamp(2rem, 1vw, 3rem);
+    }
+    .hero-graph {
+      margin-right: calc(var(--gutter) * -0.5);
+    }
+  }
+
+  .hero-index {
+    padding-bottom: clamp(3rem, 2rem + 4vw, 5rem);
+  }
+  .hero-index h2 {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.7rem;
+    margin-bottom: 1.2rem;
+  }
+  .index-list {
+    columns: 2;
+    column-gap: 3rem;
+    max-width: 58rem;
+  }
+  .index-list li {
+    break-inside: avoid;
+    margin-bottom: 0.55rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .index-list a {
+    color: var(--ink);
+  }
+  @media (max-width: 40rem) {
+    .index-list {
+      columns: 1;
+    }
+  }
+</style>

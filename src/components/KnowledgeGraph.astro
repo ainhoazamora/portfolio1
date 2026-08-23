@@ -1,0 +1,567 @@
+---
+import { ALWAYS_LABELLED } from '../data/graph';
+import type { Layout } from '../lib/layout';
+import { url } from '../lib/url';
+
+interface Props {
+  layout: Layout;
+  /** Distinguishes the full desktop graph, the reduced mobile graph and paper-page graphs. */
+  variant: 'desktop' | 'mobile' | 'local';
+  label: string;
+  interactive?: boolean;
+  class?: string;
+}
+
+const { layout, variant, label, interactive = false, class: className } = Astro.props;
+const titleId = `graph-title-${variant}`;
+const captionId = `graph-caption-${variant}`;
+---
+
+<figure
+  class:list={['graph-figure', `graph-figure--${variant}`, className]}
+  data-graph-root={interactive ? '' : undefined}
+>
+  <svg
+    class="graph"
+    viewBox={`0 0 ${layout.width} ${layout.height}`}
+    preserveAspectRatio="xMidYMid meet"
+    role="group"
+    aria-labelledby={titleId}
+  >
+    <title id={titleId}>{label}</title>
+
+    <g class="graph-edges" aria-hidden="true" data-edges>
+      {
+        layout.links.map((link) => (
+          <line
+            data-a={link.source.id}
+            data-b={link.target.id}
+            x1={link.source.x}
+            y1={link.source.y}
+            x2={link.target.x}
+            y2={link.target.y}
+          />
+        ))
+      }
+    </g>
+
+    <g class="graph-nodes" data-nodes>
+      {
+        layout.nodes.map((node) => {
+          const labelled = ALWAYS_LABELLED.includes(node.category);
+          const anchor = node.side === 'right' ? 'start' : 'end';
+          const dx = node.side === 'right' ? node.r + 7 : -(node.r + 7);
+          const aria = node.note ? `${node.label} — ${node.note}` : node.label;
+          return (
+            <g
+              class:list={['graph-node', `is-${node.category}`, { 'has-label': labelled }]}
+              data-id={node.id}
+              data-hx={node.x}
+              data-hy={node.y}
+              data-label={node.label}
+              data-note={node.note ?? ''}
+              transform={`translate(${node.x} ${node.y})`}
+            >
+              <a
+                href={node.href ? url(node.href) : undefined}
+                aria-label={node.href ? aria : undefined}
+                role={node.href ? undefined : 'presentation'}
+                tabindex={node.href ? undefined : -1}
+                aria-hidden={node.href ? undefined : 'true'}
+              >
+                <circle class="graph-hit" r={Math.max(node.r + 11, 15)} />
+                <circle class="graph-dot" r={node.r} />
+                <text class="graph-label" x={dx} y={node.labelSize * 0.34} text-anchor={anchor}>
+                  {node.label}
+                </text>
+              </a>
+            </g>
+          );
+        })
+      }
+    </g>
+  </svg>
+
+  {
+    interactive && (
+      <figcaption class="graph-caption" id={captionId} data-caption aria-live="polite">
+        <span class="graph-caption-label" data-caption-label />
+        <span class="graph-caption-note" data-caption-note />
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .graph-figure {
+    position: relative;
+    margin: 0;
+  }
+
+  .graph {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    touch-action: pan-y;
+  }
+
+  /* Edges */
+  .graph-edges line {
+    stroke: var(--rule-strong);
+    stroke-width: 0.75;
+    opacity: 0.85;
+    transition:
+      opacity 180ms ease,
+      stroke 180ms ease;
+  }
+
+  /* Nodes */
+  .graph-node a {
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .graph-node[aria-hidden='true'] a,
+  .graph-node a:not([href]) {
+    cursor: default;
+  }
+
+  .graph-hit {
+    fill: transparent;
+  }
+
+  .graph-dot {
+    fill: var(--c-research);
+    transition:
+      transform 180ms ease,
+      fill 180ms ease;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .graph-label {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    font-weight: 450;
+    letter-spacing: 0.005em;
+    fill: var(--muted);
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 3.5px;
+    stroke-linejoin: round;
+    transition:
+      fill 180ms ease,
+      opacity 180ms ease;
+    pointer-events: none;
+  }
+
+  /* Category colours */
+  .is-identity .graph-dot {
+    fill: var(--c-identity);
+  }
+  .is-identity .graph-label {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    fill: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .is-primary .graph-dot {
+    fill: var(--navy);
+  }
+  .is-primary .graph-label {
+    font-size: 12.5px;
+    font-weight: 550;
+    fill: var(--ink);
+  }
+
+  .is-research .graph-dot {
+    fill: var(--c-research);
+  }
+  .is-research .graph-label {
+    fill: var(--navy);
+  }
+
+  .is-method .graph-dot {
+    fill: var(--c-method);
+  }
+  .is-institution .graph-dot {
+    fill: var(--c-institution);
+  }
+  .is-institution .graph-label,
+  .is-method .graph-label {
+    fill: var(--muted);
+    font-size: 10px;
+  }
+
+  .is-personal .graph-dot {
+    fill: var(--c-personal);
+  }
+  .is-personal .graph-label {
+    fill: var(--c-personal);
+  }
+
+  .is-paper .graph-dot {
+    fill: var(--c-paper);
+  }
+  /* Categories without a permanent label reveal it on hover or focus. */
+  .graph-node:not(.has-label) .graph-label {
+    opacity: 0;
+  }
+  .is-paper .graph-label {
+    fill: var(--ink);
+    font-size: 10.5px;
+  }
+
+  /* Interaction states */
+  .graph-node:hover .graph-dot,
+  .graph-node:focus-within .graph-dot {
+    transform: scale(1.32);
+  }
+  .graph-node:hover .graph-label,
+  .graph-node:focus-within .graph-label {
+    fill: var(--ink);
+    opacity: 1;
+  }
+
+  .graph-node.is-dim {
+    opacity: 0.24;
+  }
+  .graph-node.is-linked .graph-label,
+  .graph-node.is-active .graph-label {
+    opacity: 1;
+  }
+  .graph-node.is-linked .graph-dot {
+    transform: scale(1.15);
+  }
+  .graph-node {
+    transition: opacity 180ms ease;
+  }
+
+  .graph-edges line.is-dim {
+    opacity: 0.14;
+  }
+  .graph-edges line.is-lit {
+    stroke: var(--accent);
+    opacity: 1;
+    stroke-width: 1.1;
+  }
+
+  /* Caption */
+  .graph-caption {
+    position: absolute;
+    left: 0;
+    bottom: -0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-height: 2.4rem;
+    font-family: var(--sans);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 160ms ease;
+  }
+  .graph-caption.is-visible {
+    opacity: 1;
+  }
+  .graph-caption-label {
+    font-size: 0.82rem;
+    color: var(--ink);
+  }
+  .graph-caption-note {
+    font-size: 0.75rem;
+    color: var(--faint);
+  }
+
+  /* Which graph shows at which size */
+  .graph-figure--desktop {
+    display: none;
+  }
+  @media (min-width: 56rem) {
+    .graph-figure--desktop {
+      display: block;
+    }
+    .graph-figure--mobile {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .graph-dot,
+    .graph-label,
+    .graph-edges line,
+    .graph-node {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * The layout itself is solved at build time, so nothing here lays the graph out.
+   * This only adds hover highlighting, gentle pointer repulsion and limited dragging,
+   * and it stops running the moment everything is back at rest.
+   */
+  type NodeState = {
+    el: SVGGElement;
+    id: string;
+    hx: number;
+    hy: number;
+    dx: number;
+    dy: number;
+    tx: number;
+    ty: number;
+    label: string;
+    note: string;
+    dragging: boolean;
+  };
+
+  const REPEL_RADIUS = 155;
+  const REPEL_STRENGTH = 26;
+  const EASE = 0.16;
+  const REST = 0.06;
+
+  function setupGraph(root: HTMLElement) {
+    const svg = root.querySelector<SVGSVGElement>('svg.graph');
+    if (!svg) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const coarse = window.matchMedia('(pointer: coarse)');
+
+    const nodeEls = Array.from(svg.querySelectorAll<SVGGElement>('.graph-node'));
+    const edgeEls = Array.from(svg.querySelectorAll<SVGLineElement>('.graph-edges line'));
+
+    const nodes = new Map<string, NodeState>();
+    for (const el of nodeEls) {
+      const id = el.dataset.id ?? '';
+      nodes.set(id, {
+        el,
+        id,
+        hx: Number(el.dataset.hx ?? 0),
+        hy: Number(el.dataset.hy ?? 0),
+        dx: 0,
+        dy: 0,
+        tx: 0,
+        ty: 0,
+        label: el.dataset.label ?? '',
+        note: el.dataset.note ?? '',
+        dragging: false,
+      });
+    }
+
+    const neighbours = new Map<string, Set<string>>();
+    const touch = (a: string, b: string) => {
+      if (!neighbours.has(a)) neighbours.set(a, new Set());
+      neighbours.get(a)!.add(b);
+    };
+    for (const edge of edgeEls) {
+      const a = edge.dataset.a ?? '';
+      const b = edge.dataset.b ?? '';
+      touch(a, b);
+      touch(b, a);
+    }
+
+    /* ---------- Highlighting ---------- */
+
+    const caption = root.querySelector<HTMLElement>('[data-caption]');
+    const captionLabel = root.querySelector<HTMLElement>('[data-caption-label]');
+    const captionNote = root.querySelector<HTMLElement>('[data-caption-note]');
+
+    function highlight(id: string | null) {
+      const related = id ? (neighbours.get(id) ?? new Set<string>()) : null;
+      for (const node of nodes.values()) {
+        const active = id !== null && node.id === id;
+        const linked = related !== null && related.has(node.id);
+        node.el.classList.toggle('is-active', active);
+        node.el.classList.toggle('is-linked', linked);
+        node.el.classList.toggle('is-dim', id !== null && !active && !linked);
+      }
+      for (const edge of edgeEls) {
+        const lit = id !== null && (edge.dataset.a === id || edge.dataset.b === id);
+        edge.classList.toggle('is-lit', lit);
+        edge.classList.toggle('is-dim', id !== null && !lit);
+      }
+
+      const node = id ? nodes.get(id) : undefined;
+      if (caption && captionLabel && captionNote) {
+        caption.classList.toggle('is-visible', Boolean(node));
+        captionLabel.textContent = node?.label ?? '';
+        captionNote.textContent = node?.note ?? '';
+      }
+    }
+
+    for (const el of nodeEls) {
+      const id = el.dataset.id ?? '';
+      el.addEventListener('pointerenter', () => highlight(id));
+      el.addEventListener('pointerleave', () => highlight(null));
+      el.addEventListener('focusin', () => highlight(id));
+      el.addEventListener('focusout', () => highlight(null));
+    }
+    svg.addEventListener('pointerleave', () => highlight(null));
+
+    /* ---------- Motion ---------- */
+
+    if (reduceMotion.matches || coarse.matches) return;
+
+    let frame = 0;
+    let running = false;
+    let pointer: { x: number; y: number } | null = null;
+
+    const point = svg.createSVGPoint();
+    function toSvg(event: PointerEvent) {
+      const ctm = svg!.getScreenCTM();
+      if (!ctm) return null;
+      point.x = event.clientX;
+      point.y = event.clientY;
+      const local = point.matrixTransform(ctm.inverse());
+      return { x: local.x, y: local.y };
+    }
+
+    function computeTargets() {
+      for (const node of nodes.values()) {
+        if (node.dragging) continue;
+        if (!pointer) {
+          node.tx = 0;
+          node.ty = 0;
+          continue;
+        }
+        const vx = node.hx + node.dx - pointer.x;
+        const vy = node.hy + node.dy - pointer.y;
+        const dist = Math.hypot(vx, vy) || 0.001;
+        if (dist > REPEL_RADIUS) {
+          node.tx = 0;
+          node.ty = 0;
+          continue;
+        }
+        const falloff = (1 - dist / REPEL_RADIUS) ** 2;
+        node.tx = (vx / dist) * REPEL_STRENGTH * falloff;
+        node.ty = (vy / dist) * REPEL_STRENGTH * falloff;
+      }
+    }
+
+    function tick() {
+      let energy = 0;
+      for (const node of nodes.values()) {
+        const ex = node.tx - node.dx;
+        const ey = node.ty - node.dy;
+        node.dx += ex * EASE;
+        node.dy += ey * EASE;
+        energy = Math.max(energy, Math.abs(ex), Math.abs(ey));
+        if (Math.abs(node.dx) < 0.01 && Math.abs(node.dy) < 0.01) {
+          node.dx = 0;
+          node.dy = 0;
+        }
+        node.el.setAttribute(
+          'transform',
+          `translate(${(node.hx + node.dx).toFixed(2)} ${(node.hy + node.dy).toFixed(2)})`,
+        );
+      }
+      for (const edge of edgeEls) {
+        const a = nodes.get(edge.dataset.a ?? '');
+        const b = nodes.get(edge.dataset.b ?? '');
+        if (!a || !b) continue;
+        edge.setAttribute('x1', (a.hx + a.dx).toFixed(2));
+        edge.setAttribute('y1', (a.hy + a.dy).toFixed(2));
+        edge.setAttribute('x2', (b.hx + b.dx).toFixed(2));
+        edge.setAttribute('y2', (b.hy + b.dy).toFixed(2));
+      }
+
+      const dragging = [...nodes.values()].some((n) => n.dragging);
+      if (energy < REST && !pointer && !dragging) {
+        running = false;
+        frame = 0;
+        return;
+      }
+      frame = requestAnimationFrame(tick);
+    }
+
+    function wake() {
+      if (running || document.hidden) return;
+      running = true;
+      frame = requestAnimationFrame(tick);
+    }
+
+    function sleep() {
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+      running = false;
+    }
+
+    svg.addEventListener('pointermove', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      pointer = toSvg(event);
+      computeTargets();
+      wake();
+    });
+
+    svg.addEventListener('pointerleave', () => {
+      pointer = null;
+      computeTargets();
+      wake();
+    });
+
+    /* ---------- Dragging ---------- */
+
+    for (const el of nodeEls) {
+      const node = nodes.get(el.dataset.id ?? '');
+      if (!node) continue;
+      let start: { x: number; y: number } | null = null;
+      let travelled = 0;
+
+      el.addEventListener('pointerdown', (event) => {
+        if (event.pointerType !== 'mouse' || event.button !== 0) return;
+        const local = toSvg(event);
+        if (!local) return;
+        node.dragging = true;
+        travelled = 0;
+        start = { x: local.x - node.dx, y: local.y - node.dy };
+        el.setPointerCapture(event.pointerId);
+        wake();
+      });
+
+      el.addEventListener('pointermove', (event) => {
+        if (!node.dragging || !start) return;
+        const local = toSvg(event);
+        if (!local) return;
+        const nx = local.x - start.x;
+        const ny = local.y - start.y;
+        travelled += Math.hypot(nx - node.tx, ny - node.ty);
+        node.tx = nx;
+        node.ty = ny;
+        node.dx = nx;
+        node.dy = ny;
+        wake();
+      });
+
+      const release = (event: PointerEvent) => {
+        if (!node.dragging) return;
+        node.dragging = false;
+        start = null;
+        node.tx = 0;
+        node.ty = 0;
+        if (el.hasPointerCapture(event.pointerId)) el.releasePointerCapture(event.pointerId);
+        wake();
+      };
+      el.addEventListener('pointerup', release);
+      el.addEventListener('pointercancel', release);
+
+      // A drag should not also follow the link.
+      el.addEventListener('click', (event) => {
+        if (travelled > 5) {
+          event.preventDefault();
+          travelled = 0;
+        }
+      });
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) sleep();
+      else if (pointer) wake();
+    });
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-graph-root]')) {
+    setupGraph(root);
+  }
+</script>

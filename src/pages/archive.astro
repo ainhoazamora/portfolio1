@@ -1,0 +1,249 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { symposiums } from '../data/site';
+import { sortPapers } from '../lib/graph';
+import { humanise } from '../lib/labels';
+import { url } from '../lib/url';
+
+type Row = {
+  kind: 'Paper' | 'Thesis' | 'Symposium' | 'Certificate';
+  title: string;
+  detail: string;
+  period: string;
+  sortKey: string;
+  href?: string;
+  external?: boolean;
+  tags: string[];
+};
+
+const papers = sortPapers(await getCollection('papers'));
+
+const paperRows: Row[] = papers.map((paper) => ({
+  kind: paper.data.type.includes('thesis') ? 'Thesis' : 'Paper',
+  title: paper.data.title,
+  detail: `${paper.data.type} · ${paper.data.institution}`,
+  period: paper.data.period,
+  sortKey: paper.data.period.slice(-4),
+  href: `/papers/${paper.id}`,
+  tags: paper.data.topics.map(humanise),
+}));
+
+const symposiumRows: Row[] = symposiums.map((item) => ({
+  kind: item.link ? 'Certificate' : 'Symposium',
+  title: item.items[0] ?? item.org,
+  detail: `${item.org} · ${item.place}`,
+  period: item.period,
+  sortKey: (item.period.match(/\d{4}/g)?.pop() ?? '0000') + item.period,
+  href: item.link?.href,
+  external: Boolean(item.link),
+  tags: [],
+}));
+
+const rows = [...paperRows, ...symposiumRows].sort((a, b) => b.sortKey.localeCompare(a.sortKey));
+---
+
+<Base
+  title="Archive"
+  current="archive"
+  description="Complete chronological list of papers, theses, symposiums and certificates."
+>
+  <div class="wrap page">
+    <p class="eyebrow">Archive</p>
+    <h1 class="page-title">Archive</h1>
+    <p class="lede">
+      Everything on this site in one list: papers, theses, symposiums and certificates, most recent
+      first.
+    </p>
+
+    <form class="archive-controls" data-archive aria-label="Search and filter the archive">
+      <label class="search">
+        <span>Search</span>
+        <input type="search" placeholder="Title, institution, topic…" data-archive-search />
+      </label>
+      <label>
+        <span>Kind</span>
+        <select data-archive-kind>
+          <option value="">Everything</option>
+          <option value="Paper">Papers</option>
+          <option value="Thesis">Theses</option>
+          <option value="Symposium">Symposiums</option>
+          <option value="Certificate">Certificates</option>
+        </select>
+      </label>
+      <p class="count" data-archive-count aria-live="polite"></p>
+    </form>
+
+    <ol class="archive-list">
+      {
+        rows.map((row) => (
+          <li
+            class="archive-row"
+            data-row
+            data-kind={row.kind}
+            data-text={`${row.title} ${row.detail} ${row.period} ${row.tags.join(' ')}`.toLowerCase()}
+          >
+            <p class="archive-period">{row.period}</p>
+            <div>
+              <h2 class="archive-title">
+                {row.href ? (
+                  <a
+                    href={row.external ? row.href : url(row.href)}
+                    rel={row.external ? 'noopener' : undefined}
+                  >
+                    {row.title}
+                  </a>
+                ) : (
+                  row.title
+                )}
+              </h2>
+              <p class="archive-detail">{row.detail}</p>
+            </div>
+            <p class="archive-kind">{row.kind}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <p class="empty" data-archive-empty hidden>Nothing matches that search.</p>
+  </div>
+</Base>
+
+<style>
+  .page-title {
+    margin-bottom: 1.2rem;
+  }
+
+  .archive-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 1.2rem;
+    margin: 2.6rem 0 1.6rem;
+  }
+  .archive-controls label {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .archive-controls span {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .archive-controls input,
+  .archive-controls select {
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+    border-radius: 4px;
+    padding: 0.45rem 0.6rem;
+  }
+  .search input {
+    min-width: 16rem;
+  }
+  .count {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--faint);
+    margin: 0 0 0.55rem;
+  }
+
+  .archive-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .archive-row {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr) 7rem;
+    gap: 0.3rem 1.5rem;
+    align-items: baseline;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .archive-period,
+  .archive-kind {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--faint);
+    margin: 0;
+  }
+  .archive-kind {
+    text-align: right;
+    text-transform: uppercase;
+  }
+  .archive-title {
+    font-size: 1.02rem;
+    font-weight: 400;
+    margin: 0;
+  }
+  .archive-title a {
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .archive-title a:hover {
+    border-bottom-color: var(--accent);
+  }
+  .archive-detail {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin: 0.15rem 0 0;
+  }
+
+  @media (max-width: 48rem) {
+    .archive-row {
+      grid-template-columns: 1fr auto;
+    }
+    .archive-period {
+      order: -1;
+    }
+    .archive-kind {
+      grid-column: 2;
+      grid-row: 1;
+    }
+  }
+
+  .empty {
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 1.5rem;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-archive]');
+  if (form) {
+    const search = form.querySelector<HTMLInputElement>('[data-archive-search]');
+    const kind = form.querySelector<HTMLSelectElement>('[data-archive-kind]');
+    const count = form.querySelector<HTMLElement>('[data-archive-count]');
+    const empty = document.querySelector<HTMLElement>('[data-archive-empty]');
+    const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-row]'));
+
+    const apply = () => {
+      const query = (search?.value ?? '').trim().toLowerCase();
+      const wanted = kind?.value ?? '';
+      let visible = 0;
+      for (const row of rows) {
+        const show =
+          (!wanted || row.dataset.kind === wanted) &&
+          (!query || (row.dataset.text ?? '').includes(query));
+        row.hidden = !show;
+        if (show) visible += 1;
+      }
+      if (count) count.textContent = `${visible} of ${rows.length} entries`;
+      if (empty) empty.hidden = visible !== 0;
+    };
+
+    form.addEventListener('submit', (event) => event.preventDefault());
+    search?.addEventListener('input', apply);
+    kind?.addEventListener('change', apply);
+    apply();
+  }
+</script>

@@ -1,0 +1,241 @@
+---
+import { url } from '../lib/url';
+
+interface Props {
+  current?: string;
+}
+const { current } = Astro.props;
+
+const tabs = [
+  { id: 'about', label: 'About', href: '/about' },
+  { id: 'research', label: 'Research', href: '/research' },
+  { id: 'cv', label: 'CV', href: '/cv' },
+  { id: 'archive', label: 'Archive', href: '/archive' },
+  { id: 'contact', label: 'Contact', href: '/contact' },
+];
+---
+
+<nav class="nav" aria-label="Primary">
+  <a class="nav-home" href={url('/')} aria-current={current === 'home' ? 'page' : undefined}>
+    <span class="nav-home-mark" aria-hidden="true"></span>
+    <span class="nav-home-text">Ainhoa Zamora</span>
+  </a>
+
+  <ul class="nav-tabs">
+    {
+      tabs.map((tab) => (
+        <li>
+          <a
+            href={url(tab.href)}
+            class:list={['nav-tab', { 'is-current': current === tab.id }]}
+            aria-current={current === tab.id ? 'page' : undefined}
+          >
+            {tab.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <details class="nav-menu" data-nav-menu>
+    <summary class="nav-menu-button" aria-label="Open the main menu">
+      <span class="nav-menu-label">Menu</span>
+      <span class="nav-menu-bars" aria-hidden="true"><i></i><i></i></span>
+    </summary>
+    <ul class="nav-menu-panel">
+      {
+        tabs.map((tab) => (
+          <li>
+            <a href={url(tab.href)} aria-current={current === tab.id ? 'page' : undefined}>
+              {tab.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </details>
+</nav>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0.85rem;
+    right: var(--gutter);
+    left: var(--gutter);
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    pointer-events: none;
+  }
+
+  .nav > * {
+    pointer-events: auto;
+  }
+
+  /* Wordmark, doubles as the link home */
+  .nav-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 0.42rem 0.75rem;
+  }
+  .nav-home-mark {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--c-identity);
+    flex: none;
+  }
+  .nav-home:hover {
+    border-color: var(--rule-strong);
+    color: var(--ink);
+  }
+
+  .nav-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 0.22rem;
+  }
+
+  .nav-tab {
+    display: block;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.46rem 0.68rem;
+    border-radius: 4px;
+    transition:
+      background-color 120ms ease,
+      color 120ms ease;
+  }
+  .nav-tab:hover {
+    background: var(--paper-sunk);
+    color: var(--ink);
+  }
+  .nav-tab.is-current {
+    color: var(--ink);
+    background: var(--paper-sunk);
+    box-shadow: inset 0 -1.5px 0 var(--accent);
+  }
+
+  /* Mobile */
+  .nav-menu {
+    display: none;
+    position: relative;
+  }
+  .nav-menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 0.46rem 0.7rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .nav-menu-button::-webkit-details-marker {
+    display: none;
+  }
+  .nav-menu-bars {
+    display: grid;
+    gap: 3px;
+    width: 13px;
+  }
+  .nav-menu-bars i {
+    display: block;
+    height: 1px;
+    background: var(--ink);
+    transition: transform 140ms ease;
+  }
+  .nav-menu[open] .nav-menu-bars i:first-child {
+    transform: translateY(2px) rotate(20deg);
+  }
+  .nav-menu[open] .nav-menu-bars i:last-child {
+    transform: translateY(-2px) rotate(-20deg);
+  }
+
+  .nav-menu-panel {
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    right: 0;
+    min-width: 11rem;
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+    padding: 0.3rem;
+    box-shadow: 0 10px 26px rgb(22 25 31 / 9%);
+  }
+  .nav-menu-panel a {
+    display: block;
+    font-family: var(--sans);
+    font-size: 0.92rem;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 0.6rem 0.7rem;
+    border-radius: 4px;
+  }
+  .nav-menu-panel a:hover {
+    background: var(--paper-sunk);
+  }
+  .nav-menu-panel a[aria-current='page'] {
+    color: var(--accent);
+  }
+
+  @media (max-width: 56rem) {
+    .nav-tabs {
+      display: none;
+    }
+    .nav-menu {
+      display: block;
+    }
+    .nav-home-text {
+      display: none;
+    }
+    .nav-home {
+      padding: 0.42rem 0.55rem;
+    }
+  }
+</style>
+
+<script>
+  // Progressive enhancement only: <details> already works without JavaScript.
+  const menu = document.querySelector<HTMLDetailsElement>('[data-nav-menu]');
+  if (menu) {
+    const close = () => menu.removeAttribute('open');
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        close();
+        menu.querySelector('summary')?.focus();
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (menu.open && !menu.contains(event.target as Node)) close();
+    });
+    menu.addEventListener('focusout', () => {
+      window.setTimeout(() => {
+        if (menu.open && !menu.contains(document.activeElement)) close();
+      }, 0);
+    });
+  }
+</script>
