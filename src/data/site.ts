@@ -10,8 +10,8 @@ export const site = {
   role: 'Criminologist & Fraud Analyst',
   tagline:
     'Criminology researcher working on computational methods, criminal networks and financial crime.',
-  location: 'Ghent, BE & Rotterdam, NL',
-  email: 'Ainhoa.Zamora@UGent.be',
+  location: 'Standord, California, US // Rotterdam, NL // Barcelona, ES',
+  email: 'ainhoa.zm@stanford.edu',
   linkedin: 'https://www.linkedin.com/in/ainhoa-zamora/',
   linkedinLabel: 'linkedin.com/in/ainhoa-zamora',
 };
