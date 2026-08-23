@@ -7,9 +7,9 @@
 
 export const site = {
   name: 'Ainhoa Zamora',
-  role: 'Criminologist & Fraud Analyst',
+  role: 'AI Researcher & Criminologist',
   tagline:
-    'Criminology researcher working on computational methods, criminal networks and financial crime.',
+    'Criminology researcher working on computational methods, generative AI governance and financial crime.',
   location: 'Standord, California, US // Rotterdam, NL // Barcelona, ES',
   email: 'ainhoa.zm@stanford.edu',
   linkedin: 'https://www.linkedin.com/in/ainhoa-zamora/',
@@ -17,18 +17,19 @@ export const site = {
 };
 
 export const bio: string[] = [
-  "I'm a criminology researcher with a strong focus on computational methods and data-driven analysis. I'm currently in the second year of my master's degree, specialising in applying predictive modelling and explainable AI to criminological research.",
-  'My current project — my master thesis — includes ensembling machine learning methods (like XGBoost and Random Forest) for classification and prediction tasks, alongside network analysis approaches (such as Bayesian methods) to map relational dynamics in criminal networks.',
-  'With my First-Class Honours degree in Criminology from the University of Bristol and hands-on experience as a fraud analyst, I strive to bring theoretical rigour and practical applicability to my research.',
-  'My work so far spans a wide range of areas, including human and organ trafficking, financial crime, computational criminology, and border security.',
+  "I'm a criminology researcher with a strong focus on computational methods and data-driven analysis. I completed my dual master's in Advanced Research in Criminology (IMARC) at Erasmus University Rotterdam and Ghent University in 2026, graduating Cum Laude, and I'm now a graduate research assistant at Stanford University.",
+  'At Stanford, I support G3O, a database tracking generative AI adoption across roughly 700,000 public institutions worldwide, led by Dr. Simone Paci. My part of the project is the data procurement pipeline: sourcing, structuring and validating institutional records at scale.',
+  'My master thesis applied ensembled machine learning methods (XGBoost, Random Forest) for classification and prediction, alongside network analysis approaches, including Bayesian methods, to map relational dynamics in criminal networks.',
+  'With a First-Class Honours degree in Criminology from the University of Bristol and a year as a fraud analyst at Indra and CaixaBank, I bring both theoretical grounding and hands-on experience to my research. I also volunteer with Humane Intelligence, red-teaming AI models for fraud and cybercrime scenarios.',
+  'My work so far spans human and organ trafficking, financial crime, computational criminology, border security, and generative AI governance.',
 ];
 
 export const interests = [
   {
-    title: 'IMARC student',
+    title: 'Stanford Graduate Researcher',
     items: [
-      "Dual master's from Erasmus University Rotterdam & Ghent University",
-      'Researching innovative approaches to computational criminological research and policy development',
+      'Graduate research assistant on G3O, tracking generative AI adoption across public institutions',
+    'AI red-teaming volunteer with Humane Intelligence',
     ],
   },
   {
@@ -36,13 +37,12 @@ export const interests = [
     items: [
       'Self-taught Python and R',
       'Improving skills in data visualisation and statistical analysis',
-      'Python toolkits: Pandas, scikit-learn, XGBoost',
+      'Python toolkits: Pandas, scikit-learn, NLTK, Matplotlib, XGBoost, Random Forest',
       'R toolkits: Tidyverse, caret, igraph',
-      'Currently learning how to build my own website',
     ],
   },
   {
-    title: 'Bookshelf in 2026',
+    title: 'Currently reading',
     items: [
       '“Essentials of Physics”, R. Feynman — reading',
       '“The Death of Ivan Ilyich”, L. Tolstoy — reading',
@@ -60,11 +60,20 @@ export const interests = [
 
 export const education = [
   {
+    institution: 'Stanford University',
+    period: 'Jun 2026 — Aug 2026',
+    items: [
+      'International Honours Programme, Visiting Student',
+      'Coursework in AI politics, algorithms and technical AI foundations (RNN, CNN, Transformers...), with emphasis on governance and responsible AI systems',
+    ],
+  },
+  {
     institution: 'Erasmus Universiteit Rotterdam & Ghent Universiteit',
-    period: '2024 — Present',
+    period: '2024 — 2026',
     items: [
       "International Master's in Advanced Research in Criminology (IMARC)",
       '2-year master programme covering Advanced European Criminal Policy, Advanced Research Methods, Migration European and International Policies, and Cybercrime & Technology',
+      'Graduated Cum Laude; thesis supervised by Wim Hardyns (BIGDATPOL, ERC-funded research)',
     ],
   },
   {
@@ -78,7 +87,7 @@ export const education = [
   },
   {
     institution: 'Agora International School Barcelona',
-    period: '2008 — 2020',
+    period: '2018 — 2020',
     items: [
       'Double degree: International Baccalaureate (IB) & LOMCE Baccalaureate',
       'Grades awarded: 38/45 (IB), 11.66/14 (LOMCE)',
@@ -88,30 +97,31 @@ export const education = [
 
 export const experience = [
   {
+    role: 'Graduate Research Assistant',
+    org: 'Stanford University, Palo Alto, United States',
+    period: 'June 2026 — Present',
+    items: [
+      'Support G3O, a database tracking generative AI adoption across roughly 700,000 public institutions worldwide, led by Dr. Simone Paci',
+      'Build and manage the data procurement pipeline: sourcing, structuring and validating institutional records at scale',
+    ],
+  },
+  {
+    role: 'AI Red Team Volunteer',
+    org: 'Humane Intelligence, Remote',
+    period: 'August 2026 — Present',
+    items: [
+      'Participate in structured red-teaming exercises to identify vulnerabilities, biases and safety limitations in generative AI systems',
+      'Contribute subject-matter expertise in fraud, financial crime and cybercrime typologies to adversarial testing and evaluation design',
+    ],
+  },
+  {
     role: 'Fraud Analyst',
     org: 'Indra & CaixaBank, Barcelona, Spain',
-    period: 'August 2025 — Present',
+    period: 'August 2025 — June 2026',
     items: [
-      'Analyse financial transactions to identify suspicious patterns and prevent fraudulent activity',
-      'Use data analysis tools and behavioural indicators to detect anomalies and emerging fraud trends',
-      'Ensure compliance with internal policies, regulatory standards and data protection requirements',
-    ],
-  },
-  {
-    role: 'Commercial and Visual Merchandiser',
-    org: 'Inditex — Zara (UK) & Stradivarius (NL)',
-    period: 'October 2023 — February 2025',
-    items: [
-      'Managed commercial operations, coordinating team efforts to optimise sales and customer engagement',
-    ],
-  },
-  {
-    role: 'Peer Mentor',
-    org: 'University of Bristol, United Kingdom',
-    period: 'March 2021 — March 2023',
-    items: [
-      'Mentored first-year students, offering academic support and personal guidance',
-      'Communicated complex university procedures in a clear and supportive manner',
+      'Analysed financial transactions to identify suspicious patterns and prevent fraudulent activity',
+      'Used data analysis tools and behavioural indicators to detect anomalies and emerging fraud trends',
+      'Ensured compliance with internal policies, regulatory standards and data protection requirements',
     ],
   },
   {
@@ -121,15 +131,6 @@ export const experience = [
     items: [
       'Contributed to a report on rehabilitative programmes for young offenders at risk of incarceration across the UK',
       'Provided guidance and support to at-risk youth',
-    ],
-  },
-  {
-    role: 'Committee Member',
-    org: 'University of Bristol — Spanish Society, United Kingdom',
-    period: 'May 2022 — November 2022',
-    items: [
-      'Co-organised cultural events on Spanish-speaking literatures, history and identity',
-      'Contributed written materials and communications to promote events',
     ],
   },
 ];
