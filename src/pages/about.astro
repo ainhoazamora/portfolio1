@@ -26,8 +26,13 @@ const photography = interests.find((i) => i.title === 'Photography')!;
         {bio.map((paragraph) => <p>{paragraph}</p>)}
       </div>
 
-      <aside class="about-side">
-        <p class="meta">Currently</p>
+      <<aside class="about-side">
+        <img
+          class="profile-photo"
+          src={url('/images/profile.jpg')}
+          alt="Portrait of Ainhoa Zamora"
+        />
+     <p class="meta">Currently</p>
         <ul class="side-list">
           <li>Second-year IMARC student, Erasmus Rotterdam & Ghent University</li>
           <li>Fraud analyst at Indra & CaixaBank, Barcelona</li>
@@ -83,6 +88,7 @@ const photography = interests.find((i) => i.title === 'Photography')!;
 </Base>
 
 <style>
+
   .page-title {
     margin-bottom: 2.6rem;
   }
@@ -97,6 +103,16 @@ const photography = interests.find((i) => i.title === 'Photography')!;
       grid-template-columns: minmax(0, 1fr) 17rem;
       gap: 4rem;
     }
+  }
+
+  .profile-photo {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center;
+    margin-bottom: 1.5rem;
+    border-radius: 3px;
   }
 
   .about-side {
