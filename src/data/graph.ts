@@ -164,6 +164,12 @@ export const baseNodes: GraphNode[] = [
   { id: 'cybercrime', label: 'Cybercrime', category: 'research', href: '/research#areas' },
   { id: 'state-crime', label: 'State crime', category: 'research', href: '/research#areas' },
   {
+  id: 'genai-governance',
+  label: 'Generative AI governance',
+  category: 'research',
+  href: '/research#areas',
+},
+  {
     id: 'gun-control-policy',
     label: 'Gun control policy',
     category: 'research',
@@ -184,18 +190,32 @@ export const baseNodes: GraphNode[] = [
 
   // Institutions
   {
+  id: 'stanford-g3o',
+  label: 'Stanford University',
+  category: 'institution',
+  href: '/cv#experience',
+  note: 'Graduate Research Assistant, G3O, 2026 — present',
+},
+{
+  id: 'humane-intelligence',
+  label: 'Humane Intelligence',
+  category: 'institution',
+  href: '/cv#experience',
+  note: 'AI red-teaming volunteer, 2026 — present',
+  },
+  {
     id: 'erasmus-rotterdam',
     label: 'Erasmus Rotterdam',
     category: 'institution',
     href: '/cv#education',
-    note: 'IMARC, 2024 — present',
+    note: 'IMARC, 2024 — 2026, Cum Laude',
   },
   {
     id: 'ghent-university',
     label: 'Ghent University',
     category: 'institution',
     href: '/cv#education',
-    note: 'IMARC, 2024 — present',
+    note: 'IMARC, 2024 — 2026, Cum Laude',
   },
   {
     id: 'university-bristol',
@@ -209,7 +229,7 @@ export const baseNodes: GraphNode[] = [
     label: 'Indra & CaixaBank',
     category: 'institution',
     href: '/cv#experience',
-    note: 'Fraud analyst, 2025 — present',
+    note: 'Fraud analyst, 2025 — 2026',
   },
 
   // Symposium hosts
@@ -307,6 +327,14 @@ export const baseLinks: GraphLink[] = [
   { source: 'symposiums', target: 'icc' },
   { source: 'symposiums', target: 'stanford' },
 
+  { source: 'ainhoa', target: 'genai-governance' },
+  { source: 'research', target: 'genai-governance' },
+  { source: 'cv', target: 'stanford-g3o' },
+  { source: 'cv', target: 'humane-intelligence' },
+  { source: 'genai-governance', target: 'stanford-g3o' },
+  { source: 'cybercrime', target: 'humane-intelligence' },
+
+  
   // Personal
   { source: 'photography', target: 'visual-ethnography' },
   { source: 'about', target: 'photography' },
