@@ -10,7 +10,7 @@ export const site = {
   role: 'AI Researcher & Criminologist',
   tagline:
     'Criminology researcher working on computational methods, generative AI governance and financial crime.',
-  location: 'Standord, California, US // Rotterdam, NL // Barcelona, ES',
+  location: 'Stanford, California, US // Rotterdam, NL // Barcelona, ES',
   email: 'ainhoa.zm@stanford.edu',
   linkedin: 'https://www.linkedin.com/in/ainhoa-zamora/',
   linkedinLabel: 'linkedin.com/in/ainhoa-zamora',
