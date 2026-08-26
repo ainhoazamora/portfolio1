@@ -64,7 +64,7 @@ export const photography: PhotoEntry[] = [
     location: 'San Francisco, California, USA',
   },
   {
-    image: '/images/IMG_27341.jpg',
+    image: '/images/football.jpg',
     location: 'Stanford University Stadium, California, USA',
   },
   {
