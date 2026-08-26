@@ -79,6 +79,18 @@ export const photography: PhotoEntry[] = [
     image: '/images/IMG_8731.jpg',
     location: 'Abadía de Montserrat, Catalunya, Spain',
   },
+  {
+    image: '/images/WhatsApp_Image_2026-08-26_at_14_37_46.jpg',
+    location: 'Ghent, Belgium',
+  },
+  {
+    image: '/images/WhatsApp_Image_2026-08-26_at_14_36_41.jpg',
+    location: 'Reinfall, Switzerland',
+  },
+  {
+    image: '/images/WhatsApp_Image_2026-08-26_at_14_35_07.jpg',
+    location: 'Santiago de Compostela, Spain',
+  },
 ];
 
 export const education = [
