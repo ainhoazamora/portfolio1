@@ -56,16 +56,32 @@ export type PhotoEntry = {
 
 export const photography: PhotoEntry[] = [
   {
-    image: '/images/photo1.jpg',
-    location: 'Barcelona, Spain — Gothic Quarter',
+    image: '/images/img2.jpg',
+    location: 'San Francisco, Bay Area, California, USA',
   },
   {
-    image: '/images/photo2.jpg',
-    location: 'Stanford Campus, California — Golden Hour',
+    image: '/images/IMG_2734.jpg',
+    location: 'Stanford University Campus Stadium, California, USA',
   },
   {
-    image: '/images/photo3.jpg',
-    location: 'Rotterdam, Netherlands — Harbor',
+    image: '/images/img3.jpg',
+    location: 'Golden Gate Bridge, San Francisco, California, USA',
+  },
+  {
+    image: '/images/img4.jpg',
+    location: 'Zurich City Center, Switzerland',
+  },
+  {
+    image: '/images/img6.jpg',
+    location: 'Abadía de Montserrat, Catalunya, Spain,
+  },
+  {
+    image: '/images/img8.jpg',
+    location: 'Brussels, Belgium',
+  },
+  {
+    image: '/images/img7.jpg',
+    location: 'Utrecht, The Netherlands',
   },
   // Add more photos here as you collect them
 ];
