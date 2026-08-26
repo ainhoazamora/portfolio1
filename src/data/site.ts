@@ -61,15 +61,15 @@ export const photography: PhotoEntry[] = [
   },
   {
     image: '/images/IMG_2638.jpg',
-    location: 'Golden Gate Bridge, San Francisco, California, USA',
+    location: 'San Francisco, California, USA',
   },
   {
-    image: '/images/IMG_2734__1_.jpg',
-    location: 'Stanford University Campus Stadium, California, USA',
+    image: '/images/IMG_27341.jpg',
+    location: 'Stanford University Stadium, California, USA',
   },
   {
     image: '/images/IMG_3141.jpg',
-    location: 'San Francisco Bay Area, California, USA',
+    location: 'San Francisco, California, USA',
   },
   {
     image: '/images/IMG_5063.jpg',
