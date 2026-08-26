@@ -17,11 +17,9 @@ export const site = {
 };
 
 export const bio: string[] = [
-  "I'm a criminology researcher with a strong focus on computational methods and data-driven analysis. I completed my dual master's in Advanced Research in Criminology (IMARC) at Erasmus University Rotterdam and Ghent University in 2026, graduating Cum Laude, and I'm now a graduate research assistant at Stanford University.",
-  'At Stanford, I support G3O, a database tracking generative AI adoption across roughly 700,000 public institutions worldwide, led by Dr. Simone Paci. My part of the project is the data procurement pipeline: sourcing, structuring and validating institutional records at scale.',
-  'My master thesis applied ensembled machine learning methods (XGBoost, Random Forest) for classification and prediction, alongside network analysis approaches, including Bayesian methods, to map relational dynamics in criminal networks.',
-  'With a First-Class Honours degree in Criminology from the University of Bristol and a year as a fraud analyst at Indra and CaixaBank, I bring both theoretical grounding and hands-on experience to my research. I also volunteer with Humane Intelligence, red-teaming AI models for fraud and cybercrime scenarios.',
-  'My work so far spans human and organ trafficking, financial crime, computational criminology, border security, and generative AI governance.',
+  "I’m a criminology researcher working at the intersection of computational methods, financial crime and responsible AI. I completed an international master’s in Advanced Research in Criminology at Erasmus University Rotterdam and Ghent University, graduating Cum Laude. 
+  'I currently work as a graduate research assistant at Stanford University, contributing to G3O—a database tracking generative AI adoption across public institutions worldwide. My research combines machine learning and network analysis, supported by previous experience as a fraud analyst at Indra and CaixaBank. 
+  'I also volunteer with Humane Intelligence, red-teaming AI systems for fraud and cybercrime risks.',
 ];
 
 export const interests = [
