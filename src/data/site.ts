@@ -47,13 +47,27 @@ export const interests = [
       '“El dolor de los demás”, M. Á. Hernández — finished',
     ],
   },
+];
+
+export type PhotoEntry = {
+  image: string;
+  location: string;
+};
+
+export const photography: PhotoEntry[] = [
   {
-    title: 'Photography',
-    items: [
-      'Amateur photography',
-      'Bridging pictures and criminology through visual ethnographies',
-    ],
+    image: '/images/photo1.jpg',
+    location: 'Barcelona, Spain — Gothic Quarter',
   },
+  {
+    image: '/images/photo2.jpg',
+    location: 'Stanford Campus, California — Golden Hour',
+  },
+  {
+    image: '/images/photo3.jpg',
+    location: 'Rotterdam, Netherlands — Harbor',
+  },
+  // Add more photos here as you collect them
 ];
 
 export const education = [
