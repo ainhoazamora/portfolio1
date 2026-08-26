@@ -54,7 +54,7 @@ export type PhotoEntry = {
   location: string;
 };
 
-  export const photography: PhotoEntry[] = [
+export const photography: PhotoEntry[] = [
   {
     image: '/images/IMG_1845.jpg',
     location: 'Solothurn, Switzerland',
@@ -79,12 +79,7 @@ export type PhotoEntry = {
     image: '/images/IMG_8731.jpg',
     location: 'Abadía de Montserrat, Catalunya, Spain',
   },
-   {
-    image: '/images/img4.jpg',
-    location: 'Zurich City Center, Switzerland',
-  },
 ];
-
 
 export const education = [
   {
