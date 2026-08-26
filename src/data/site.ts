@@ -54,37 +54,37 @@ export type PhotoEntry = {
   location: string;
 };
 
-export const photography: PhotoEntry[] = [
+  export const photography: PhotoEntry[] = [
   {
-    image: '/images/img2.jpg',
-    location: 'San Francisco, Bay Area, California, USA',
+    image: '/images/IMG_1845.jpg',
+    location: 'Solothurn, Switzerland',
   },
   {
-    image: '/images/IMG_2734.jpg',
-    location: 'Stanford University Campus Stadium, California, USA',
-  },
-  {
-    image: '/images/img3.jpg',
+    image: '/images/IMG_2638.jpg',
     location: 'Golden Gate Bridge, San Francisco, California, USA',
   },
   {
-    image: '/images/img4.jpg',
-    location: 'Zurich City Center, Switzerland',
+    image: '/images/IMG_2734__1_.jpg',
+    location: 'Stanford University Campus Stadium, California, USA',
   },
   {
-    image: '/images/img6.jpg',
-    location: 'Abadía de Montserrat, Catalunya, Spain',
+    image: '/images/IMG_3141.jpg',
+    location: 'San Francisco Bay Area, California, USA',
   },
   {
-    image: '/images/img8.jpg',
+    image: '/images/IMG_5063.jpg',
     location: 'Brussels, Belgium',
   },
   {
-    image: '/images/img7.jpg',
-    location: 'Utrecht, The Netherlands',
+    image: '/images/IMG_8731.jpg',
+    location: 'Abadía de Montserrat, Catalunya, Spain',
   },
-  // Add more photos here as you collect them
+   {
+    image: '/images/img4.jpg',
+    location: 'Zurich City Center, Switzerland',
+  },
 ];
+
 
 export const education = [
   {
