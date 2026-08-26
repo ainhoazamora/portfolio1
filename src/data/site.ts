@@ -73,7 +73,7 @@ export const photography: PhotoEntry[] = [
   },
   {
     image: '/images/img6.jpg',
-    location: 'Abadía de Montserrat, Catalunya, Spain,
+    location: 'Abadía de Montserrat, Catalunya, Spain',
   },
   {
     image: '/images/img8.jpg',
