@@ -80,15 +80,15 @@ export const photography: PhotoEntry[] = [
     location: 'Abadía de Montserrat, Catalunya, Spain',
   },
   {
-    image: '/images/WhatsApp_Image_2026-08-26_at_14_37_46.jpg',
+    image: '/images/ghent.jpg',
     location: 'Ghent, Belgium',
   },
   {
-    image: '/images/WhatsApp_Image_2026-08-26_at_14_36_41.jpg',
+    image: '/images/reinfall.jpg',
     location: 'Reinfall, Switzerland',
   },
   {
-    image: '/images/WhatsApp_Image_2026-08-26_at_14_35_07.jpg',
+    image: '/images/santiago.jpg',
     location: 'Santiago de Compostela, Spain',
   },
 ];
