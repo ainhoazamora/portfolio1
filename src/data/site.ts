@@ -17,8 +17,8 @@ export const site = {
 };
 
 export const bio: string[] = [
-  "I’m a criminology researcher working at the intersection of computational methods, financial crime and responsible AI. I completed an international master’s in Advanced Research in Criminology at Erasmus University Rotterdam and Ghent University, graduating Cum Laude. 
-  'I currently work as a graduate research assistant at Stanford University, contributing to G3O—a database tracking generative AI adoption across public institutions worldwide. My research combines machine learning and network analysis, supported by previous experience as a fraud analyst at Indra and CaixaBank. 
+  "I'm a criminology researcher working at the intersection of computational methods, financial crime and responsible AI. I completed an international master's in Advanced Research in Criminology at Erasmus University Rotterdam and Ghent University, graduating Cum Laude.",
+  'I currently work as a graduate research assistant at Stanford University, contributing to G3O—a database tracking generative AI adoption across public institutions worldwide. My research combines machine learning and network analysis, supported by previous experience as a fraud analyst at Indra and CaixaBank.',
   'I also volunteer with Humane Intelligence, red-teaming AI systems for fraud and cybercrime risks.',
 ];
 
@@ -27,7 +27,7 @@ export const interests = [
     title: 'Stanford Graduate Researcher',
     items: [
       'Graduate research assistant on G3O, tracking generative AI adoption across public institutions',
-    'AI red-teaming volunteer with Humane Intelligence',
+      'AI red-teaming volunteer with Humane Intelligence',
     ],
   },
   {
@@ -42,9 +42,9 @@ export const interests = [
   {
     title: 'Currently reading',
     items: [
-      '“Essentials of Physics”, R. Feynman — reading',
-      '“The Death of Ivan Ilyich”, L. Tolstoy — reading',
-      '“El dolor de los demás”, M. Á. Hernández — finished',
+      '"Essentials of Physics", R. Feynman — reading',
+      '"The Death of Ivan Ilyich", L. Tolstoy — reading',
+      '"El dolor de los demás", M. Á. Hernández — finished',
     ],
   },
 ];
