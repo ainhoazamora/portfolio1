@@ -85,7 +85,7 @@ export const photography: PhotoEntry[] = [
   },
   {
     image: '/images/reinfall.jpg',
-    location: 'Reinfall, Switzerland',
+    location: 'Rheinfall, Schaffhausen, Switzerland',
   },
   {
     image: '/images/santiago.jpg',
