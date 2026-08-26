@@ -1,8 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import { bio, interests, site, toolkits } from '../data/site';
+import { bio, interests, site, toolkits, photography } from '../data/site';
 import { url } from '../lib/url';
-
 const research = [
   'Computational criminology',
   'Criminal networks',
@@ -11,21 +10,16 @@ const research = [
   'Border security',
   'Cybercrime',
 ];
-
 const bookshelf = interests.find((i) => i.title === 'Currently reading')!;
-const photography = interests.find((i) => i.title === 'Photography')!;
 ---
-
 <Base title="About" current="about" description={`About ${site.name}, ${site.role.toLowerCase()}.`}>
   <div class="wrap page">
     <p class="eyebrow">About</p>
     <h1 class="page-title">Hi, I'm Ainhoa</h1>
-
     <div class="about-grid">
       <div class="prose">
         {bio.map((paragraph) => <p>{paragraph}</p>)}
       </div>
-
       <aside class="about-side">
         <img
           class="profile-photo"
@@ -40,14 +34,12 @@ const photography = interests.find((i) => i.title === 'Photography')!;
         </ul>
       </aside>
     </div>
-
     <section class="section" id="interests">
       <h2>Research interests</h2>
       <ul class="tags">
         {research.map((item) => <li class="tag">{item}</li>)}
       </ul>
     </section>
-
     <section class="section" id="methods">
       <h2>Computational methods</h2>
       <p>
@@ -66,33 +58,38 @@ const photography = interests.find((i) => i.title === 'Photography')!;
         }
       </ul>
     </section>
-
     <section class="section" id="bookshelf">
       <h2>Bookshelf</h2>
       <ul class="entry-list">
         {bookshelf.items.map((item) => <li>{item}</li>)}
       </ul>
     </section>
-
     <section class="section" id="photography">
       <h2>Photography</h2>
-      <ul class="entry-list">
-        {photography.items.map((item) => <li>{item}</li>)}
-      </ul>
+      <p class="photo-intro">
+        Amateur photography bridging visual storytelling and criminological perspectives.
+      </p>
+      <div class="photo-gallery">
+        {
+          photography.map((photo) => (
+            <figure class="photo-card">
+              <img src={url(photo.image)} alt={photo.location} loading="lazy" />
+              <figcaption>{photo.location}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
       <p class="note">
-        A selection of photographs has not been published yet. In the meantime, the research is over
-        on the <a href={url('/research')}>Research</a> page.
+        These images explore the intersection of visual documentation and criminological inquiry.
       </p>
     </section>
   </div>
 </Base>
 
 <style>
-
   .page-title {
     margin-bottom: 2.6rem;
   }
-
   .about-grid {
     display: grid;
     gap: 2.5rem;
@@ -104,7 +101,6 @@ const photography = interests.find((i) => i.title === 'Photography')!;
       gap: 4rem;
     }
   }
-
   .profile-photo {
     display: block;
     width: 100%;
@@ -114,7 +110,6 @@ const photography = interests.find((i) => i.title === 'Photography')!;
     margin-bottom: 1.5rem;
     border-radius: 3px;
   }
-
   .about-side {
     border-top: 1px solid var(--rule);
     padding-top: 1rem;
@@ -125,7 +120,6 @@ const photography = interests.find((i) => i.title === 'Photography')!;
     padding: 0.5rem 0;
     border-bottom: 1px solid var(--rule);
   }
-
   .toolkits {
     display: grid;
     gap: 0;
@@ -149,7 +143,43 @@ const photography = interests.find((i) => i.title === 'Photography')!;
     font-size: 0.9rem;
     text-align: right;
   }
-
+  .photo-intro {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+  .photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0 1.5rem;
+  }
+  .photo-card {
+    margin: 0;
+    overflow: hidden;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .photo-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .photo-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: center;
+  }
+  .photo-card figcaption {
+    padding: 0.85rem;
+    font-size: 0.88rem;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+    background: var(--paper);
+    line-height: 1.4;
+  }
   .note {
     color: var(--faint);
     font-size: 0.9rem;
