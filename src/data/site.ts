@@ -91,6 +91,10 @@ export const photography: PhotoEntry[] = [
     image: '/images/santiago.jpg',
     location: 'Santiago de Compostela, Spain',
   },
+  {
+    image: '/images/geneve.jpg',
+    location: 'Genève, Switzerland',
+  },
 ];
 
 export const education = [
